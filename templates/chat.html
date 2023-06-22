@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container w-100 mt-2">
+    {% include 'navbar.html' %}
+    <div class="container mt-2 p-2">
+        <div class="card">
+            <div class="position-relative overflow-auto" style="max-height:40rem;">
+                <div class="chat-messages p-4" style="">
+                    {% if message %}
+                    <div class="alert alert-primary fade show" role="alert">
+                        {{message}}
+                    </div>
+                    {% endif %}
+                    {% for message in messages %}
+                    <div class="chat-message pb-4">
+                        <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                            <div class="font-weight-bold mb-1"></div>
+                            {{message.text}}
+                            <div>
+                                <span class="badge rounded-pill bg-dark">{{message.user.email}}, {{message.get_datetime()}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div>
+            <form action="/chat/message" class="shadow p-2 mt-2" method="post">
+                <input type="text" name="text" class="form-control mb-2" maxlength="255"
+                       placeholder="Сообщение (макс. длина 255)" required/>
+                <button class="form-control btn btn-outline-dark" type="submit">Отправить</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

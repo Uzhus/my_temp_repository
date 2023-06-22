@@ -1,0 +1,177 @@
+<div class="modal fade" id="my_profile_info_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Профиль</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"> {{current_user.name}} {{current_user.last_name}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{current_user.email}}</h6>
+                        <p class="card-text"></p>
+                        {% if current_user.is_admin() %}
+                        <span class="badge bg-dark">АДМИНИСТРАТОР</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="service" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Сервис - Услуги</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <script>
+                        function setTime(value) {
+                        document.getElementById('serviceTime').value = value;};
+
+
+
+
+
+
+
+
+
+
+
+                        </script>
+                        <form>
+                            <select class="form-select">
+                                <option>Электрик</option>
+                                <option>Сантехник</option>
+                                <option selected>Клининг</option>
+                            </select>
+                            <input class="form-control mt-2" type="date" placeholder="Қосымша уақыт" required>
+                            <input class="form-control mt-2" id="serviceTime" value="10:00" type="time"
+                                   placeholder="Қосымша уақыт" required
+                                   readonly>
+                            <div class="text-center">
+                                <div class="btn-group text-center" role="group">
+                                    <button type="button" onclick="setTime('10:00');" class="shadow btn btn-light">
+                                        10:00
+                                    </button>
+                                    <button type="button" onclick="setTime('11:00');" class="shadow btn btn-light">
+                                        11:00
+                                    </button>
+                                    <button type="button" onclick="setTime('13:00');" class="shadow btn btn-light">
+                                        13:00
+                                    </button>
+                                    <button type="button" onclick="setTime('15:00');" class="shadow btn btn-light">
+                                        15:00
+                                    </button>
+                                    <button type="button" onclick="setTime('17:00');" class="shadow btn btn-light">
+                                        17:00
+                                    </button>
+                                    <button type="button" onclick="setTime('19:00');" class="shadow btn btn-light">
+                                        19:00
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="btn w-100 btn-outline-dark mt-2" type="submit">Тапсырыс беру</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal show" id="helpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header border-bottom-0">
+                <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+                <h1 class="fw-bold mb-0 fs-2">Анықтама</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="m-2">
+                    <p>
+                        <i class="bi bi-cursor"></i> Барлық төлемтер басты бетте табылады
+                    </p>
+                    <p>
+                        <i class="bi bi-cursor"></i> Төлем жасау керек пікірін көрсететінтер өзгеріп отыр
+                        <te class="text-danger">
+                            қызыл
+                        </te>
+                    </p>
+                    <p>
+                        <i class="bi bi-cursor"></i> Айға кешендерді құру керек
+                    </p>
+                    <p>
+                        <i class="bi bi-cursor"></i> Келесі батырманы пайдалану арқылы бюджет қалай айырмашылыққа қойылады деп көру мүмкін
+                        <te class="text-primary">"Пара Қайда тұратын?"</te>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-lg bg-light shadow">
+    <a class="navbar-brand text-dark m-2" href="/">
+        <h4><i class="bi bi-chat-left"></i> ЖКХ</h4>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+                <a class="nav-link link-dark" href="/chat">Сөйлесу</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link link-dark" data-bs-toggle="modal" href=""
+                   data-bs-target="#my_profile_info_modal">Менің профилім</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link link-dark" data-bs-toggle="modal" href=""
+                   data-bs-target="#service">Қызметтер</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#helpModal">Анықтама</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="/budget">Пара Қайда тұратын?</a>
+            </li>
+            {% if current_user.is_admin() %}
+            <li class="nav-item">
+                <a class="nav-link link-dark" href="/admin">Admin</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link link-danger" href="/logout">Шығу</a>
+            </li>
+
+        </ul>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav ">
+                <li class="nav-item me-4">
+                    <div class="dropdown  me-aut">
+                        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            Тіл
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/kz">KZ</a></li>
+                            <li><a class="dropdown-item" href="/en">EN</a></li>
+                            <li><a class="dropdown-item" href="/">RU</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+</nav>

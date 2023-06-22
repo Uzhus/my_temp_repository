@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container w-100 mt-2">
+    <div class="modal fade" id="addReceiptModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/receipt" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Айғақ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <input type="number" placeholder="Электр энергиясы (тәулік)" class="form-control"
+                                   name="electric_day" min="0"
+                                   required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" placeholder="Электр қуаты (түнгі)" class="form-control"
+                                   name="electric_night" min="0"
+                                   required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" placeholder="Вода (холодная)" class="form-control"
+                                   name="water_cold" min="0"
+                                   required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" placeholder="Вода (горячая)" class="form-control"
+                                   name="water_hot" min="0"
+                                   required>
+                        </div>
+                        <div class="form-check mt-2 mb-2">
+                            <input class="form-check-input" type="checkbox" checked disabled value=""
+                                   id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Измерімдердің дұрыстығын растау
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Жіберу</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% include 'navbar_kz.html' %}
+    <div class="container mt-2 p-2">
+        {% if message %}
+        <div class="alert alert-primary fade show" role="alert">
+            {{message}}
+        </div>
+        {% endif %}
+        {% if current_user.get_current_month_receipt() == None %}
+        <div class="alert alert-danger fade show" role="alert">
+            <p>Показаныяларды беру қажет</p>
+            <button class="btn btn-outline-dark shadow me-2 ml-2" data-bs-toggle="modal"
+                    data-bs-target="#addReceiptModal">Показаныяларды беру
+            </button>
+        </div>
+        {% endif %}
+        {% if receipts|length == 0 %}
+        <div class="mt-2 text-center text-dark">
+            <h4>Құжаттар жоқ</h4>
+        </div>
+        {% else %}
+        <div class="row">
+            {% for receipt in receipts %}
+            {% if receipt.payment_receipt == None %}
+            <div class="modal fade" id="paymentModal{{receipt.id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header p-5 pb-4 border-bottom-0">
+                            <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+                            <h1 class="fw-bold mb-0 fs-2">Төлем формасы
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </h1>
+                            <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-5 pt-0">
+                            <form class="mt-2 mb-2" action="/pay" method="post">
+                                <div class="p-0">
+                                    <div class="">
+                                        <p class="textmuted h8 mb-2">Банк картасын пайдаланыңыз</p>
+                                        <div class="form">
+                                            <input name="receipt_id" value="{{receipt.id}}" hidden>
+                                            <input name="sum" value="{{receipt.get_sum()}}" hidden>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="card border-0">
+                                                        <input class="form-control" type="text"
+                                                               placeholder="4211 4292 4911 4292" minlength="16"
+                                                               maxlength="16"
+                                                               required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6"><input class="form-control my-3" type="text"
+                                                                          placeholder="MM/YY" minlength="5"
+                                                                          maxlength="5" required>
+                                                </div>
+                                                <div class="col-6"><input class="form-control my-3" type="text"
+                                                                          placeholder="cvv" maxlength="3" minlength="3"
+                                                                          required>
+                                                </div>
+                                                <div>
+                                                    <button type="submit" class="col-12 btn btn-primary d-block h8">
+                                                        {{receipt.get_sum()}} тг. төлеу
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card col-md-4 border border-danger shadow m-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{receipt.get_sum()}} тг.</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{receipt.date}}</h6>
+                    <div>
+                        <code class="card-text"><i class="bi bi-lightbulb"></i> Электр энергиясы (тәулік) -
+                            {{receipt.electric_day}} тг.</code>
+                    </div>
+                    <div>
+                        <code class="card-text"><i class="bi bi-lightbulb-fill"></i> Электр энергиясы (түнгі) -
+                            {{receipt.electric_night}} тг.</code>
+                    </div>
+                    <div>
+                        <code class="card-text"><i class="bi bi-droplet"></i> Су (суық) -
+                            {{receipt.water_cold}} тг.</code>
+                    </div>
+                    <div>
+                        <code class="card-text"><i class="bi bi-droplet-fill"></i> Су (жылу) -
+                            {{receipt.water_hot}} тг.</code>
+                    </div>
+                    <div>
+                        <button class="mt-2 btn btn-outline-success w-100" data-bs-toggle="modal"
+                                data-bs-target="#paymentModal{{receipt.id}}">Төлеу
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card col-md-4 border border-success shadow m-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{receipt.get_sum()}} тг.</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{receipt.date}}</h6>
+                    <div>
+                        <code class="card-text"><i class="bi bi-lightbulb"></i> Электр энергиясы (тәулік) -
+                            {{receipt.electric_day}} тг.</code>
+                    </div>
+                    <div>
+                        <code class="card-text"><i class="bi bi-lightbulb-fill"></i> Электр энергиясы (түнгі) -
+                            {{receipt.electric_night}} тг.</code>
+                    </div>
+                    <div>
+                        <code class="card-text"><i class="bi bi-droplet"></i> Су (суық) -
+                            {{receipt.water_cold}} тг.</code>
+                    </div>
+                    <div>
+                        <code class="card-text"><i class="bi bi-droplet-fill"></i> Су (жылу) -
+                            {{receipt.water_hot}} тг.</code>
+                    </div>
+                    <div class="border border-success shadow m-2 rounded rounded-4 p-2">
+                        <div class="h6 text">
+                            ТӨЛДІ
+                        </div>
+                        <code>{{receipt.payment_receipt.datetime}}</code>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
